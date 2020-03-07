@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.erp.mapper.RoleMapper">
+
+    <delete id="remove">
+        delete from role where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="update">
+        update role set `name`=#{role.name} where id=#{role.id}
+    </update>
+
+    <insert id="add">
+        insert  into role(`name`) value(#{role.name})
+    </insert>
+
+    <select id="count" resultType="int">
+        select count(id) from role
+        <where>
+            <if test="role.name!=null and role.name!=''">
+                and `name` like '${role.name}'
+            </if>
+        </where>
+    </select>
+    
+    <!--  List<Role> page-->
+    <select id="page" resultType="com.erp.pojo.Role">
+        select * from role
+        <where>
+            <if test="role.name!=null and role.name!=''">
+                and name like '${role.name}'
+            </if>
+        </where>
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="findAll" resultType="com.erp.pojo.Role">
+        select * from role
+    </select>
+</mapper>
